@@ -1,5 +1,7 @@
 # My_FrameDoc — Estructura de Documentación
 
+![My_FrameDoc](media/logo.png)
+
 Extensión para Visual Studio Code que genera una estructura completa de
 documentación técnica en Markdown: 41 documentos distribuidos en 20 carpetas,
 sin escribir una sola línea de contenido. Los archivos son esqueletos con

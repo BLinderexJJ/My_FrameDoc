@@ -23,6 +23,18 @@
   ],
   "main": "./dist/extension.js",
   "icon": "media/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BLinderexJJ/My_FrameDoc.git"
+  },
+  "bugs": {
+    "url": "https://github.com/BLinderexJJ/My_FrameDoc/issues"
+  },
+  "homepage": "https://github.com/BLinderexJJ/My_FrameDoc#readme",
+  "galleryBanner": {
+    "color": "#1F2430",
+    "theme": "dark"
+  },
   "activationEvents": [
     "onCommand:myframedoc.createInWorkspaceFolder",
     "onCommand:myframedoc.createInSelectedFolder"
