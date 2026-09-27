@@ -231,6 +231,31 @@ describe('generate', () => {
     expect(result.substitutions).toBe(2);
   });
 
+  it('cuenta cero sustituciones si no escribe nada', async () => {
+    // El conteo se hacía sobre la plantilla entera, así que una segunda pasada
+    // que omite los 41 archivos informaba 38 sustituciones sin haber escrito
+    // ninguno. El número debe reflejar lo que realmente se generó.
+    const target = path.join(workdir, 'doc');
+    await generate(target, { tree: SAMPLE, projectName: 'SIGES' });
+    const second = await generate(target, { tree: SAMPLE, projectName: 'SIGES' });
+    expect(second.written).toHaveLength(0);
+    expect(second.substitutions).toBe(0);
+  });
+
+  it('cuenta solo las sustituciones de los archivos escritos', async () => {
+    // Se borra el archivo de proceso, que no lleva [PROYECTO], y se deja que la
+    // política por defecto omita los otros dos. Se escribe 1 archivo y ese
+    // archivo no tiene marcadores, así que el total debe ser 0, no 2.
+    const target = path.join(workdir, 'doc');
+    await generate(target, { tree: SAMPLE, projectName: 'SIGES' });
+    await rm(path.join(target, '02_diseno/as_is/proceso_as_is_01.md'));
+
+    const result = await generate(target, { tree: SAMPLE, projectName: 'SIGES' });
+    expect(result.written).toHaveLength(1);
+    expect(result.skipped).toHaveLength(2);
+    expect(result.substitutions).toBe(0);
+  });
+
   it('es idempotente: la segunda pasada no cambia nada', async () => {
     const target = path.join(workdir, 'doc');
     await generate(target, { tree: SAMPLE, projectName: 'SIGES' });

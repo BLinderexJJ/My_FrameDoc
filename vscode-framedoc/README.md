@@ -51,6 +51,29 @@ doc/
 
 El identificador completo es `BLinderexJJ.my-framedoc`.
 
+### Desde la terminal
+
+```powershell
+# Windows (PowerShell)
+irm https://github.com/BLinderexJJ/My_FrameDoc/releases/download/v1.0.0/my-framedoc-1.0.0.vsix -OutFile mf.vsix
+code --install-extension mf.vsix
+```
+
+```bash
+# Linux y macOS
+curl -L -o mf.vsix https://github.com/BLinderexJJ/My_FrameDoc/releases/download/v1.0.0/my-framedoc-1.0.0.vsix
+code --install-extension mf.vsix
+```
+
+Comprueba que quedó instalada:
+
+```bash
+code --list-extensions --show-versions | grep framedoc
+# blinderexjj.my-framedoc@1.0.0
+```
+
+Para desinstalarla: `code --uninstall-extension BLinderexJJ.my-framedoc`.
+
 ### Desde el archivo `.vsix`
 
 1. Compila o descarga `my-framedoc-1.0.0.vsix`.
@@ -88,6 +111,63 @@ documentación y elige:
 > **My_FrameDoc: Crear documentación en la carpeta seleccionada**
 
 Si seleccionas un archivo, se usa su carpeta contenedora.
+
+### Generación desde la terminal
+
+La extensión incluye una CLI que genera la misma estructura sin abrir VS Code.
+Sirve para scripts, integración continua o cuando prefieres no cambiar de
+ventana. Requiere Node.js 20 o superior.
+
+Una vez instalada la extensión, la CLI queda dentro de su carpeta. La ruta
+incluye la versión, así que se resuelve con un comodín para no tener que
+actualizarla en cada versión. Se ordena por fecha de modificación y no por
+nombre, porque en orden alfabético `1.0.9` queda después de `1.0.10`:
+
+```powershell
+# Windows (PowerShell)
+$cli = (Get-ChildItem "$env:USERPROFILE\.vscode\extensions\blinderexjj.my-framedoc-*" -Directory |
+        Sort-Object LastWriteTime -Descending | Select-Object -First 1).FullName + "\dist\generate-cli.js"
+node $cli ../mi-proyecto "Mi Proyecto"
+```
+
+```bash
+# Linux y macOS
+cli=$(ls -dt "$HOME"/.vscode/extensions/blinderexjj.my-framedoc-* | head -1)/dist/generate-cli.js
+node "$cli" ../mi-proyecto "Mi Proyecto"
+```
+
+Salida esperada:
+
+```text
+Destino            : /ruta/al/proyecto
+Proyecto           : Mi Proyecto
+Archivos escritos  : 41
+Archivos conservados: 0
+Carpetas creadas   : 20
+Sustituciones [PROYECTO]: 38
+Fin de línea       : lf
+```
+
+Si omites el nombre del proyecto, se usa `[PROYECTO]` y no se sustituye nada.
+Es lo que hace la comparación byte a byte con la plantilla.
+
+#### Opciones
+
+| Opción | Efecto |
+|---|---|
+| `--eol=lf` \| `--eol=crlf` | Fin de línea de la salida. Por defecto `lf`. |
+| `--overwrite` | Sobrescribe los archivos que ya existen. |
+| `--abort` | Falla si algún archivo ya existe. |
+| `--gitkeep` | Añade `.gitkeep` a las carpetas que quedan vacías. |
+| `--json` | Imprime el resultado en JSON, para procesarlo. |
+
+```bash
+node $cli ./salida "Mi Proyecto" --gitkeep --json
+```
+
+El conteo de sustituciones refleja lo que se escribió de verdad. Si los 41
+archivos ya existen y se conservan, informa `0` sustituciones, porque no se
+sustituyó nada en disco.
 
 ### Qué pasa al ejecutarlo
 
@@ -165,7 +245,7 @@ backticks y la única aparición definida está dentro.
 ```bash
 npm run gen:template   # regenera src/template.generated.ts desde ../doc/
 npm run typecheck      # comprobación de tipos
-npm test               # 90 pruebas
+npm test               # 93 pruebas
 npm run build          # empaqueta dist/extension.js y dist/generate-cli.js
 npm run watch          # recompilación continua
 npm run package        # genera my-framedoc-<versión>.vsix

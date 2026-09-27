@@ -1,4 +1,4 @@
-﻿# VS Code Extension artifacts
+# VS Code Extension artifacts
 *.vsix
 .vscode-test/
 

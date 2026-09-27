@@ -1,0 +1,77 @@
+name: Release
+
+# Publica el VSIX como asset del release cada vez que se empuja un tag vX.Y.Z.
+#
+# Se usa el GITHUB_TOKEN que GitHub injecta en el workflow, no un token personal.
+# Asi no hay ningun secreto en el repositorio y el mismo mecanismo sirve para
+# v1.0.1, v1.1.0 y siguientes.
+#
+# Uso:
+#   npm version patch        # o minor / major
+#   git push --follow-tags
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Empaquetar y publicar
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repositorio
+        uses: actions/checkout@v4
+
+      - name: Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: vscode-framedoc/package-lock.json
+
+      - name: Instalar dependencias
+        working-directory: vscode-framedoc
+        run: npm ci
+
+      - name: Comprobar tipos
+        working-directory: vscode-framedoc
+        run: npm run typecheck
+
+      - name: Pruebas
+        working-directory: vscode-framedoc
+        run: npm test
+
+      - name: Empaquetar
+        working-directory: vscode-framedoc
+        run: |
+          npm run build
+          npx vsce package --no-dependencies
+
+      - name: Nombre del VSIX a partir del tag
+        id: vsix
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "archivo=my-framedoc-$version.vsix" >> "$GITHUB_OUTPUT"
+          echo "-> my-framedoc-$version.vsix"
+
+      - name: Publicar el release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: My_FrameDoc ${{ steps.vsix.outputs.version }}
+          draft: false
+          generate_release_notes: true
+          files: vscode-framedoc/${{ steps.vsix.outputs.archivo }}
+
+      - name: Resumen
+        run: |
+          echo "Release ${{ github.ref_name }} publicado."
+          echo "Instalar con:"
+          echo "  irm https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/${{ steps.vsix.outputs.archivo }} -OutFile mf.vsix"
+          echo "  code --install-extension mf.vsix"

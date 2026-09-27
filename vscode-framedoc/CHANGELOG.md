@@ -9,6 +9,12 @@ el versionado semántico ([SemVer](https://semver.org/lang/es/)).
 
 ### Añadido
 
+- Workflow de GitHub Actions que empaqueta el VSIX y lo publica como asset del
+  release al empujar un tag `v*`, usando el `GITHUB_TOKEN` sin guardar ningún
+  secreto en el repositorio.
+- Documentación de uso desde la terminal: instalación con una línea y ejecución
+  de la CLI de generación con la ruta resuelta por comodín.
+- Prueba de que el conteo de sustituciones refleja los archivos escritos.
 - Icono de la extensión en `media/icon.png` (128×128, con canal alfa), referenciado
   desde el campo `icon` del manifiesto.
 - Pruebas que impiden que la plantilla se duplique o quede desactualizada.
@@ -33,7 +39,7 @@ el versionado semántico ([SemVer](https://semver.org/lang/es/)).
 - Panel de salida `My_FrameDoc` con el registro de cada generación.
 - CLI de generación (`dist/generate-cli.js`) para verificación en integración
   continua sin necesidad de abrir VS Code.
-- 90 pruebas automáticas, incluidas las que comparan la salida generada con
+- 93 pruebas automáticas, incluidas las que comparan la salida generada con
   el árbol de origen byte a byte.
 
 ### Cambiado

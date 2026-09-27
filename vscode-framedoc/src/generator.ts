@@ -245,11 +245,6 @@ export async function generate(
     }
   }
 
-  let substitutions = 0;
-  for (const file of tree.files) {
-    substitutions += countProjectTokens(file.content);
-  }
-
   const createdDirs: string[] = [];
   for (const dir of plan.dirs) {
     const absolute = path.join(targetRoot, toNative(dir.path));
@@ -261,6 +256,10 @@ export async function generate(
 
   const written: string[] = [];
   const skipped: string[] = [];
+  // Se cuentan solo las sustituciones de los archivos que se escriben. Calcularlo
+  // sobre `tree.files` daba un total irreal: al omitir todo, informaba 38
+  // sustituciones sin haber escrito un solo archivo.
+  let substitutions = 0;
   for (const entry of plan.files) {
     if (entry.action === 'skip') {
       skipped.push(entry.path);
@@ -271,6 +270,7 @@ export async function generate(
       // Invariante: `plan.files` y `tree.files` comparten la misma lista.
       throw new TemplateError(`Archivo fuera de la plantilla: ${entry.path}`);
     }
+    substitutions += countProjectTokens(source.content);
     const content = applyEol(
       substituteProject(source.content, options.projectName),
       eol,
