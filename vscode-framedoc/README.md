@@ -42,6 +42,15 @@ doc/
 
 ## Instalación
 
+### Desde el marketplace de VS Code
+
+1. Abre VS Code y pulsa <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd> para ir a las
+   extensiones.
+2. Busca `My_FrameDoc`.
+3. Pulsa **Instalar**.
+
+El identificador completo es `BLinderexJJ.my-framedoc`.
+
 ### Desde el archivo `.vsix`
 
 1. Compila o descarga `my-framedoc-1.0.0.vsix`.

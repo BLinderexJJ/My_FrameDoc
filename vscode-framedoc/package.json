@@ -3,7 +3,7 @@
   "displayName": "My_FrameDoc",
   "description": "Genera una estructura completa de documentación técnica en Markdown: planificación y requerimientos, diseño y construcción, y mantenimiento y seguridad.",
   "version": "1.0.0",
-  "publisher": "my-framedoc",
+  "publisher": "BLinderexJJ",
   "license": "MIT",
   "engines": {
     "vscode": "^1.85.0",
