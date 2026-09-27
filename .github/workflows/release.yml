@@ -39,6 +39,13 @@ jobs:
         working-directory: vscode-framedoc
         run: npm ci
 
+      # `src/template.generated.ts` esta en .gitignore: es un artefacto que se
+      # produce a partir de ../doc/. Sin este paso, typecheck y los tests fallan
+      # con TS2307 porque el modulo no existe en un clon limpio.
+      - name: Generar la plantilla desde ../doc
+        working-directory: vscode-framedoc
+        run: npm run gen:template
+
       - name: Comprobar tipos
         working-directory: vscode-framedoc
         run: npm run typecheck
