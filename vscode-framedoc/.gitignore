@@ -4,3 +4,6 @@ out/
 *.vsix
 src/template.generated.ts
 .vscode-test/
+
+# Cache de Vitest
+.vite/
