@@ -1,0 +1,115 @@
+{
+  "name": "my-framedoc",
+  "displayName": "My_FrameDoc",
+  "description": "Genera una estructura completa de documentación técnica en Markdown: planificación y requerimientos, diseño y construcción, y mantenimiento y seguridad.",
+  "version": "1.0.0",
+  "publisher": "my-framedoc",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.85.0",
+    "node": ">=20"
+  },
+  "categories": [
+    "Other",
+    "Snippets"
+  ],
+  "keywords": [
+    "documentation",
+    "markdown",
+    "scaffold",
+    "requirements",
+    "plantilla",
+    "documentacion"
+  ],
+  "main": "./dist/extension.js",
+  "icon": "media/icon.png",
+  "activationEvents": [
+    "onCommand:myframedoc.createInWorkspaceFolder",
+    "onCommand:myframedoc.createInSelectedFolder"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "myframedoc.createInWorkspaceFolder",
+        "title": "My_FrameDoc: Crear documentación en la carpeta del espacio de trabajo",
+        "category": "My_FrameDoc"
+      },
+      {
+        "command": "myframedoc.createInSelectedFolder",
+        "title": "My_FrameDoc: Crear documentación en la carpeta seleccionada",
+        "category": "My_FrameDoc"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "myframedoc.createInSelectedFolder",
+          "when": "explorerResourceIsFolder",
+          "group": "7_modification@100"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "myframedoc.createInSelectedFolder",
+          "when": "false"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "My_FrameDoc",
+      "properties": {
+        "myframedoc.rootFolderName": {
+          "type": "string",
+          "default": "doc",
+          "markdownDescription": "Nombre de la carpeta raíz que se crea dentro del destino. Si la carpeta elegida ya tiene este nombre, se usa directamente en lugar de anidarla.",
+          "minLength": 1
+        },
+        "myframedoc.overwriteExisting": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Si es `true`, sobrescribe sin preguntar los archivos que ya existen. Si es `false`, pregunta en cada ejecución."
+        },
+        "myframedoc.createGitkeep": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Si es `true`, crea un `.gitkeep` dentro de las carpetas que quedan vacías, para que Git las conserve."
+        },
+        "myframedoc.eol": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "lf",
+            "crlf"
+          ],
+          "enumDescriptions": [
+            "Respeta la configuración de fin de línea del documento abierto en el editor",
+            "LF (\\n) en todos los archivos",
+            "CRLF (\\r\\n) en todos los archivos"
+          ],
+          "default": "auto",
+          "markdownDescription": "Fin de línea de los archivos generados."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "gen:template": "node scripts/build-template.mjs",
+    "prebuild": "npm run gen:template",
+    "build": "node esbuild.mjs",
+    "watch": "node esbuild.mjs --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "vscode:prepublish": "npm run build",
+    "package": "vsce package --no-dependencies",
+    "vscode:publish": "vsce publish"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.2.1",
+    "esbuild": "^0.24.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

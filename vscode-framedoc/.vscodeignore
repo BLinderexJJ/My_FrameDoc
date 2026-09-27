@@ -1,0 +1,22 @@
+# El bundle `dist/extension.js` ya lleva la plantilla incrustada, así que
+# `templates/` no se necesita en tiempo de ejecución y no debe viajar al VSIX.
+# Sigue versionado en el repositorio porque es la fuente de verdad.
+templates/**
+.vscode/**
+.vscode-test/**
+src/**
+test/**
+scripts/**
+out/**
+node_modules/**
+# Solo viaja `media/icon.png` (128x128), que exige la galería de VS Code.
+# El .ico de Windows, el SVG y las variantes grandes se quedan en el
+# repositorio: pesan 500 KB y no se usan en tiempo de ejecución.
+media/**
+!media/icon.png
+.gitignore
+tsconfig.json
+esbuild.mjs
+vitest.config.ts
+**/*.map
+**/*.ts

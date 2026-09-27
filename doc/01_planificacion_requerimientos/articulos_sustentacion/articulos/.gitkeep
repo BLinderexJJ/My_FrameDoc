@@ -1,0 +1,9 @@
+# Esta carpeta está vacía a propósito.
+#
+# My_FrameDoc la genera en los proyectos donde se crea la documentación, y debe
+# seguir presente aunque esté vacía. Git no rastrea carpetas vacías, así que este
+# archivo actúa de marcador.
+#
+# No forma parte de la plantilla: al compilar, scripts/build-template.mjs lo
+# ignora y sigue registrando la carpeta como vacía. La extensión tampoco lo
+# copia a los proyectos generados.

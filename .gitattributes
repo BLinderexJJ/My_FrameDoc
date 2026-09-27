@@ -1,0 +1,46 @@
+# Normalización de fin de línea.
+#
+# Sin esto, Git no registra el fin de línea que usan las herramientas y en
+# Windows todo se convierte a CRLF al hacer checkout. Eso rompe la
+# reproducibilidad: un clon limpio en Windows produce un VSIX con bytes
+# distintos al construido en la máquina original, porque `core.autocrlf` de
+# Git for Windows está en `true` y aplica a los archivos sin extensión, como
+# LICENSE, que ninguna regla específica cubre.
+#
+# `eol=lf` en la regla general obliga a LF también al hacer checkout. Las
+# excepciones van después y ganan, porque en .gitattributes la última regla
+# que coincide es la que aplica.
+
+* text=auto eol=lf
+
+# Documentación: LF en el repositorio, sin importar el sistema operativo.
+*.md   text eol=lf
+
+# Código y configuración: LF también, para que los diffs no cambien de signo
+# según quién los edite.
+*.ts   text eol=lf
+*.mjs  text eol=lf
+*.js   text eol=lf
+*.json text eol=lf
+*.yml  text eol=lf
+*.yaml text eol=lf
+*.css  text eol=lf
+*.html text eol=lf
+*.txt  text eol=lf
+
+# Requieren CRLF: el formato de Windows las obliga.
+*.bat  text eol=crlf
+*.cmd  text eol=crlf
+*.ps1  text eol=crlf
+
+# Binarios: Git no debe tocar su contenido.
+*.png  binary
+*.ico  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.webp binary
+*.pdf  binary
+*.vsix binary
+*.woff  binary
+*.woff2 binary

@@ -1,0 +1,6 @@
+node_modules/
+dist/
+out/
+*.vsix
+src/template.generated.ts
+.vscode-test/
